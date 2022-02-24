@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS DCDataRaw;
+CREATE TABLE DCDataRaw
+USING parquet                           
+OPTIONS (
+    PATH "path to the iot-device/data_center"
+    )
+    
+    
+DESCRIBE EXTENDED table_name; // to find out the metadata of each column to specify and Detailed table information
+
+
+SELECT * FROM table_name 
+ORDER BY RAND() // view random indexes(rows) from the whole table
+LIMIT n;  // n is the number of rows you want to display
+
+
+to deal with nested Data you need to use the term Explode which breaks down into keys and values 
+
+SELECT EXPLODE (column_name with nested struct values and string keys)
+FROM tablename;
+
+
+WITH CTE_NAME  -- specify the name of the result set we will query
+AS                  
+(                   -- wrap a SELECT statement in parentheses
+  SELECT            -- this is the temporary result set you will query
+    col1,
+    col2,
+    EXPLODE (nested_column)
+  FROM
+    table name
+)
+SELECT             -- write a select statment to query the result set
+  key,
+  dc_id,
+  date,
+  value.description,  
+  value.ip,
+  value.temps,
+  value.co2_level
+FROM               -- this query is coming from the CTE we named
+  ExplodeSource;
